@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - EmotiDiary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-color: #667eea;
+      --primary-dark: #5a67d8;
+      --secondary-color: #764ba2;
+      --accent-color: #120514;
+      --success-color: #48bb78;
+      --warning-color: #ed8936;
+      --error-color: #f56565;
+      --background-color: #f7fafc;
+      --card-background: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #4a5568;
+      --text-muted: #718096;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: var(--card-background);
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--card-background);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem 0;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-header {
+      padding: 0 2rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .logo i {
+      font-size: 2rem;
+    }
+
+    .nav-menu {
+      padding: 2rem 0;
+    }
+
+    .nav-item {
+      margin: 0.5rem 1rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      padding: 2rem;
+      transition: margin-left 0.3s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .stat-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .stat-icon.primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    }
+
+    .stat-icon.success {
+      background: linear-gradient(135deg, var(--success-color), #38a169);
+    }
+
+    .stat-icon.warning {
+      background: linear-gradient(135deg, var(--warning-color), #dd6b20);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* Content Cards */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .content-card {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .feature-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .feature-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--success-color), #38a169);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-content h4 {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .feature-content p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Chart Section */
+    .chart-section {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .reset-btn {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--error-color), #e53e3e);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    #dashboard-chart {
+      width: 100%;
+      max-height: 400px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .content-card {
+        padding: 1.5rem;
+      }
+
+      .chart-section {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 0.5rem;
+      }
+
+      .content-card, .chart-section {
+        padding: 1rem;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    /* Overlay for mobile menu */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Overlay -->
+  <div class="overlay" onclick="closeMobileMenu()"></div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-heart"></i>
+        <span>EmotiDiary</span>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item">
+        <a href="dashboard.html" class="nav-link active">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="index.html" class="nav-link">
+          <i class="fas fa-plus-circle"></i>
+          <span>Mulai Refleksi</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="history.html" class="nav-link">
+          <i class="fas fa-chart-line"></i>
+          <span>Riwayat Emosi</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <header class="page-header">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Selamat datang kembali! Lihat ringkasan perjalanan emosi Anda.</p>
+      </header>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Refleksi</span>
+            <div class="stat-icon primary">
+              <i class="fas fa-book"></i>
+            </div>
+          </div>
+          <div class="stat-value" id="total-count">0</div>
+          <div class="stat-label">Refleksi tersimpan</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Emosi Wajah Terakhir</span>
+            <div class="stat-icon success">
+              <i class="fas fa-smile"></i>
+            </div>
+          </div>
+          <div class="stat-value" id="last-face">-</div>
+          <div class="stat-label">Deteksi terakhir</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Emosi Teks Terakhir</span>
+            <div class="stat-icon warning">
+              <i class="fas fa-pen"></i>
+            </div>
+          </div>
+          <div class="stat-value" id="last-text">-</div>
+          <div class="stat-label">Analisis terakhir</div>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <div class="content-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-info"></i>
+            </div>
+            <h2 class="card-title">Tentang EmotiDiary</h2>
+          </div>
+          <p><strong>EmotiDiary</strong> adalah aplikasi refleksi emosi harian berbasis teknologi AI dan deteksi wajah. Aplikasi ini membantu Anda memahami dan melacak perubahan emosional setiap hari, untuk meningkatkan kesadaran diri dan kesehatan mental.</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h2 class="card-title">Fitur Unggulan</h2>
+          </div>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="feature-content">
+                <h4>Deteksi Ekspresi Wajah</h4>
+                <p>Menggunakan webcam untuk mengenali emosi secara otomatis</p>
+              </div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="feature-content">
+                <h4>Analisis Teks Refleksi</h4>
+                <p>Dengan bantuan AI Gemini, mengenali emosi dari tulisan Anda</p>
+              </div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="feature-content">
+                <h4>Visualisasi Emosi</h4>
+                <p>Tabel & grafik perkembangan emosi dari waktu ke waktu</p>
+              </div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="feature-content">
+                <h4>Export PDF</h4>
+                <p>Unduh riwayat refleksi dan grafik secara profesional</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chart Section -->
+      <div class="chart-section">
+        <div class="chart-header">
+          <h2 class="chart-title">
+            <i class="fas fa-chart-line"></i>
+            Grafik Perjalanan Emosi
+          </h2>
+          <button class="reset-btn" onclick="resetData()">
+            <i class="fas fa-trash"></i>
+            Reset Data
+          </button>
+        </div>
+        <canvas id="dashboard-chart"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <script>      const totalCount = document.getElementById('total-count');
+    const lastFace = document.getElementById('last-face');
+    const lastText = document.getElementById('last-text');
+    
+    // Listen for data updates from other pages
+    window.addEventListener('dataUpdated', function(event) {
+      console.log('Dashboard received data update event:', event.detail);
+      loadSummary();
+    });
+
+    const emotionMap = {
+      "senang": 3,
+      "tenang": 2,
+      "netral": 1, 
+      "bingung": 0,
+      "cemas": -1,
+      "takut": -2,
+      "sedih": -3,
+      "marah": -4,
+      "terkejut": 0,
+      "jijik": -2
+    };
+
+    function loadSummary() {
+      const data = JSON.parse(localStorage.getItem('reflections')) || [];
+      totalCount.textContent = data.length;
+
+      if (data.length > 0) {
+        const last = data[0]; // Data is stored with newest first
+        lastFace.textContent = last.emotionTranslated || '-';
+        lastText.textContent = last.emotionTranslated || '-';
+      }
+
+      renderDashboardChart(data);
+    }
+
+    function resetData() {
+      const confirmReset = confirm("Yakin ingin menghapus semua data refleksi?");
+      if (confirmReset) {
+        localStorage.removeItem('reflections');
+        alert("Data berhasil direset.");
+        loadSummary();
+      }
+    }
+
+    function renderDashboardChart(data) {
+      const labels = [];
+      const emotionValues = [];
+
+      // Sort by date/time (oldest first for chart)
+      const sorted = [...data].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+      sorted.forEach(entry => {
+        const time = `${entry.date} ${entry.time}`;
+        labels.push(time);
+        
+        // Use emotionTranslated which is in Indonesian
+        const emotionText = entry.emotionTranslated?.toLowerCase() || '';
+        emotionValues.push(emotionMap[emotionText] ?? null);
+      });
+
+      const ctx = document.getElementById('dashboard-chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Emosi',
+              data: emotionValues,
+              borderColor: '#667eea',
+              backgroundColor: 'rgba(102, 126, 234, 0.1)',
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#667eea',
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { 
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                padding: 20,
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '500'
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#ffffff',
+              bodyColor: '#ffffff',
+              borderColor: '#667eea',
+              borderWidth: 1,
+              cornerRadius: 8,
+              callbacks: {
+                label: function(context) {
+                  const val = context.raw;
+                  const label = Object.entries(emotionMap).find(([k, v]) => v === val)?.[0] || 'tidak diketahui';
+                  return `${context.dataset.label}: ${label}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: -4,
+              max: 3,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                stepSize: 1,
+                font: {
+                  family: 'Inter',
+                  size: 11
+                },
+                callback: function(value) {
+                  return Object.entries(emotionMap).find(([k, v]) => v === value)?.[0] || value;
+                }
+              },
+              title: {
+                display: true,
+                text: 'Jenis Emosi',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '600'
+                }
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: { 
+                maxRotation: 45,
+                font: {
+                  family: 'Inter',
+                  size: 10
+                }
+              },
+              title: {
+                display: true,
+                text: 'Waktu Refleksi',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '600'
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      sidebar.classList.toggle('show');
+      overlay.classList.toggle('show');
+    }
+
+    function closeMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    }
+
+    // Close mobile menu when clicking on nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    loadSummary();
+  </script>
+</body>
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Emosi - EmotiDiary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-color: #667eea;
+      --primary-dark: #5a67d8;
+      --secondary-color: #764ba2;
+      --accent-color: #f093fb;
+      --success-color: #48bb78;
+      --warning-color: #ed8936;
+      --error-color: #f56565;
+      --background-color: #f7fafc;
+      --card-background: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #4a5568;
+      --text-muted: #718096;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: var(--card-background);
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--card-background);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem 0;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-header {
+      padding: 0 2rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .logo i {
+      font-size: 2rem;
+    }
+
+    .nav-menu {
+      padding: 2rem 0;
+    }
+
+    .nav-item {
+      margin: 0.5rem 1rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      padding: 2rem;
+      transition: margin-left 0.3s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    /* Action Buttons */
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--error-color), #e53e3e);
+      color: white;
+    }
+
+    /* Content Section */
+    .content-section {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    th:first-child {
+      border-top-left-radius: 8px;
+    }
+
+    th:last-child {
+      border-top-right-radius: 8px;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:hover {
+      background-color: #e8f4fd;
+    }
+
+    .emotion-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .emotion-senang { background: #d4edda; color: #155724; }
+    .emotion-tenang { background: #cce5ff; color: #004085; }
+    .emotion-netral { background: #f8f9fa; color: #495057; }
+    .emotion-bingung { background: #fff3cd; color: #856404; }
+    .emotion-cemas { background: #f8d7da; color: #721c24; }
+    .emotion-takut { background: #f5c6cb; color: #721c24; }
+    .emotion-sedih { background: #d1ecf1; color: #0c5460; }
+    .emotion-marah { background: #f8d7da; color: #721c24; }
+
+    /* Chart Section */
+    .chart-section {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      position: relative;
+      height: 450px;
+    }
+
+    #emotion-chart {
+      position: relative !important;
+      max-height: 400px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state p {
+      font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .content-section, .chart-section {
+        padding: 1.5rem;
+      }
+
+      .action-bar {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Mobile table */
+      .table-container {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: white;
+      }
+
+      td {
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        padding-left: 50% !important;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+
+      td:before {
+        content: attr(data-label) ": ";
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      td:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 0.5rem;
+      }
+
+      .content-section, .chart-section {
+        padding: 1rem;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+    }
+
+    /* Overlay for mobile menu */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Overlay -->
+  <div class="overlay" onclick="closeMobileMenu()"></div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-heart"></i>
+        <span>EmotiDiary</span>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item">
+        <a href="dashboard.html" class="nav-link">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="index.html" class="nav-link">
+          <i class="fas fa-plus-circle"></i>
+          <span>Mulai Refleksi</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="history.html" class="nav-link active">
+          <i class="fas fa-chart-line"></i>
+          <span>Riwayat Emosi</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <header class="page-header">
+        <h1 class="page-title">Riwayat Emosi & Refleksi</h1>
+        <p class="page-subtitle">Lihat perjalanan emosi dan refleksi harian Anda</p>
+      </header>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <button class="btn btn-primary" onclick="exportPDF()">
+          <i class="fas fa-download"></i>
+          Export ke PDF
+        </button>
+        <button class="btn btn-danger" onclick="resetHistory()">
+          <i class="fas fa-trash"></i>
+          Reset Semua Riwayat
+        </button>
+      </div>
+
+      <!-- Table Section -->
+      <div class="content-section" id="export-area">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-table"></i>
+          </div>
+          <h2 class="section-title">Data Refleksi</h2>
+        </div>
+
+        <div class="table-container">
+          <table id="log-table">
+            <thead>
+              <tr>
+                <th>Waktu</th>
+                <th>Emosi Wajah</th>
+                <th>Emosi Teks</th>
+                <th>Refleksi</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h2 class="section-title">Grafik Perjalanan Emosi</h2>
+        </div>
+        <div class="chart-container" style="position: relative; height:400px; width:100%">
+          <canvas id="emotion-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const historyBody = document.getElementById('history-body');
+    const emotionChartCanvas = document.getElementById('emotion-chart');
+
+    const emotionMap = {
+      "senang": 3,
+      "tenang": 2, 
+      "netral": 1,
+      "bingung": 0,
+      "cemas": -1,
+      "takut": -2,
+      "sedih": -3,
+      "marah": -4,
+      "terkejut": 0,
+      "jijik": -2
+    };
+
+    function getEmotionBadgeClass(emotion) {
+      const emotionMap = {
+        'senang': 'senang',
+        'netral': 'netral',
+        'marah': 'marah',
+        'sedih': 'sedih',
+        'takut': 'takut',
+        'terkejut': 'bingung',
+        'jijik': 'cemas'
+      };
+      
+      const mappedEmotion = emotionMap[emotion.toLowerCase()] || 'netral';
+      return `emotion-badge emotion-${mappedEmotion}`;
+    }
+
+    function loadHistory() {
+      const data = JSON.parse(localStorage.getItem('reflections')) || [];
+      historyBody.innerHTML = '';
+
+      if (data.length === 0) {
+        historyBody.innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>Belum ada data refleksi</h3>
+                <p>Mulai refleksi pertama Anda untuk melihat riwayat di sini</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const sortedData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const labels = [];
+      const emotionTextValues = [];
+      const emotionFaceValues = [];
+
+      // Show all data in table
+      sortedData.forEach(entry => {
+        const time = `${entry.date} ${entry.time}`;
+        const emotionText = entry.emotionTranslated || '-';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td data-label="Waktu">${time}</td>
+          <td data-label="Emosi Wajah">
+            <span class="${getEmotionBadgeClass(emotionText)}">${emotionText}</span>
+          </td>
+          <td data-label="Emosi Teks">
+            <span class="${getEmotionBadgeClass(emotionText)}">${emotionText}</span>
+          </td>
+          <td data-label="Refleksi">${entry.text}</td>
+        `;
+        historyBody.appendChild(row);
+      });
+      
+      // For chart, limit to last 15 entries to prevent overcrowding
+      const chartData = [...sortedData].reverse().slice(0, 15).reverse();
+      
+      chartData.forEach(entry => {
+        // Format date to be more compact for chart
+        const time = entry.date.slice(5); // Just month & day (MM-DD)
+        labels.unshift(time);
+        emotionTextValues.unshift(emotionMap[entry.emotionTranslated?.toLowerCase()] ?? null);
+        emotionFaceValues.unshift(emotionMap[entry.emotionTranslated?.toLowerCase()] ?? null);
+      });
+
+      renderChart(labels, emotionTextValues, emotionFaceValues);
+    }
+
+    function renderChart(labels, textValues, faceValues) {
+      // Destroy previous chart instance if exists
+      if (window.emotionChart) {
+        window.emotionChart.destroy();
+      }
+      
+      window.emotionChart = new Chart(emotionChartCanvas, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Emosi Teks',
+              data: textValues,
+              borderColor: '#667eea',
+              backgroundColor: 'rgba(102, 126, 234, 0.1)',
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#667eea',
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              fill: true
+            },
+            {
+              label: 'Emosi Wajah',
+              data: faceValues,
+              borderColor: '#f093fb',
+              backgroundColor: 'rgba(240, 147, 251, 0.1)',
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#f093fb',
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          aspectRatio: 2,
+          layout: {
+            padding: {
+              top: 10,
+              right: 20,
+              bottom: 10,
+              left: 10
+            }
+          },
+          plugins: {
+            legend: { 
+              position: 'top',
+              align: 'center',
+              labels: {
+                boxWidth: 15,
+                usePointStyle: true,
+                padding: 20,
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '500'
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#ffffff',
+              bodyColor: '#ffffff',
+              borderColor: '#667eea',
+              borderWidth: 1,
+              cornerRadius: 8,
+              callbacks: {
+                label: function(context) {
+                  const val = context.raw;
+                  const label = Object.entries(emotionMap).find(([k, v]) => v === val)?.[0] || 'tidak diketahui';
+                  return `${context.dataset.label}: ${label}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                font: {
+                  family: 'Inter',
+                  size: 11
+                },
+                callback: function(value) {
+                  return Object.entries(emotionMap).find(([k, v]) => v === value)?.[0] || value;
+                }
+              },
+              title: {
+                display: true,
+                text: 'Jenis Emosi',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '600'
+                }
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: { 
+                maxRotation: 45,
+                minRotation: 45,
+                font: {
+                  family: 'Inter',
+                  size: 10
+                },
+                autoSkip: true,
+                maxTicksLimit: 10
+              },
+              title: {
+                display: true,
+                text: 'Waktu',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '600'
+                },
+                padding: {top: 10, bottom: 0}
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function exportPDF() {
+      const element = document.getElementById('export-area');
+      const opt = {
+        margin: 0.3,
+        filename: `emotiDiary-riwayat-${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    function resetHistory() {
+      const confirmReset = confirm("Apakah Anda yakin ingin menghapus semua riwayat?");
+      if (confirmReset) {
+        localStorage.removeItem('reflections');
+        loadHistory();
+        alert("Semua riwayat telah dihapus.");
+      }
+    }
+
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      sidebar.classList.toggle('show');
+      overlay.classList.toggle('show');
+    }
+
+    function closeMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    }
+
+    // Close mobile menu when clicking on nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+    
+    // Listen for data updates from other pages
+    window.addEventListener('dataUpdated', function(event) {
+      console.log('History page received data update event:', event.detail);
+      loadHistory();
+    });
+    
+    window.addEventListener('reflectionSaved', function(event) {
+      console.log('New reflection saved:', event.detail);
+      loadHistory();
+    });
+    
+    // Fix chart resizing issues
+    window.addEventListener('resize', function() {
+      if (window.emotionChart) {
+        setTimeout(() => {
+          window.emotionChart.resize();
+          window.emotionChart.update();
+        }, 300);
+      }
+    });
+    
+    // Initial load
+    loadHistory();
+  </script>
+</body>
+</html>
