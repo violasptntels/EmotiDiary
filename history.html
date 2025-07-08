@@ -406,6 +406,575 @@
       margin-top: 1.5rem;
     }
 
+    /* Date range filter styles */
+    .date-filter {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .date-filter-title {
+      color: white;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .date-inputs {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .date-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .date-label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .date-input {
+      padding: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      width: 150px;
+    }
+
+    .date-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .btn-filter {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-apply {
+      background: linear-gradient(135deg, var(--success-color), #38a169);
+      color: white;
+    }
+
+    .btn-reset {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-filter:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Chart info */
+    .chart-info {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .chart-info-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: var(--card-background);
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--card-background);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem 0;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-header {
+      padding: 0 2rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .logo i {
+      font-size: 2rem;
+    }
+
+    .nav-menu {
+      padding: 2rem 0;
+    }
+
+    .nav-item {
+      margin: 0.5rem 1rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      padding: 1.5rem;
+      transition: margin-left 0.3s ease;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 95%;
+    }
+
+    .page-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Action Buttons */
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--error-color), #e53e3e);
+      color: white;
+    }
+
+    /* Content Section */
+    .content-section {
+      background: var(--card-background);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    th:first-child {
+      border-top-left-radius: 8px;
+    }
+
+    th:last-child {
+      border-top-right-radius: 8px;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:hover {
+      background-color: #e8f4fd;
+    }
+
+    .emotion-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .emotion-senang { background: #d4edda; color: #155724; }
+    .emotion-tenang { background: #cce5ff; color: #004085; }
+    .emotion-netral { background: #f8f9fa; color: #495057; }
+    .emotion-bingung { background: #fff3cd; color: #856404; }
+    .emotion-cemas { background: #f8d7da; color: #721c24; }
+    .emotion-takut { background: #f5c6cb; color: #721c24; }
+    .emotion-sedih { background: #d1ecf1; color: #0c5460; }
+    .emotion-marah { background: #f8d7da; color: #721c24; }
+
+    /* Action buttons in table */
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      min-width: auto;
+    }
+
+    .btn-edit {
+      background: linear-gradient(135deg, var(--warning-color), #dd6b20);
+      color: white;
+    }
+
+    .btn-delete {
+      background: linear-gradient(135deg, var(--error-color), #e53e3e);
+      color: white;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: var(--card-background);
+      margin: 5% auto;
+      padding: 2rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .close {
+      color: var(--text-muted);
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: var(--text-primary);
+    }
+
+    .form-group-modal {
+      margin-bottom: 1rem;
+    }
+
+    .form-label-modal {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    /* Date range filter styles */
+    .date-filter {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .date-filter-title {
+      color: white;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .date-inputs {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .date-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .date-label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .date-input {
+      padding: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      width: 150px;
+    }
+
+    .date-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .btn-filter {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-apply {
+      background: linear-gradient(135deg, var(--success-color), #38a169);
+      color: white;
+    }
+
+    .btn-reset {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-filter:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Chart info */
+    .chart-info {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .chart-info-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
     /* Responsive Design */
     @media (max-width: 1024px) {
       .main-content {
@@ -603,6 +1172,34 @@
         </button>
       </div>
 
+      <!-- Date Filter -->
+      <div class="date-filter">
+        <div class="date-filter-title">
+          <i class="fas fa-calendar-alt"></i>
+          Filter Rentang Tanggal untuk Grafik
+        </div>
+        <div class="date-inputs">
+          <div class="date-group">
+            <label class="date-label">Dari Tanggal:</label>
+            <input type="date" id="start-date" class="date-input">
+          </div>
+          <div class="date-group">
+            <label class="date-label">Sampai Tanggal:</label>
+            <input type="date" id="end-date" class="date-input">
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filter btn-apply" onclick="applyDateFilter()">
+            <i class="fas fa-filter"></i>
+            Terapkan Filter
+          </button>
+          <button class="btn-filter btn-reset" onclick="resetDateFilter()">
+            <i class="fas fa-undo"></i>
+            Reset
+          </button>
+        </div>
+      </div>
+
       <!-- Table Section -->
       <div class="content-section" id="export-area">
         <div class="section-header">
@@ -633,6 +1230,11 @@
             <i class="fas fa-chart-line"></i>
           </div>
           <h2 class="section-title">Grafik Perjalanan Emosi</h2>
+        </div>
+        <div class="chart-info">
+          <p class="chart-info-text" id="chart-info">
+            Menampilkan semua data refleksi
+          </p>
         </div>
         <div class="chart-container" style="position: relative; height:400px; width:100%">
           <canvas id="emotion-chart"></canvas>
@@ -673,6 +1275,8 @@
       return `emotion-badge emotion-${mappedEmotion}`;
     }
 
+    let currentDateFilter = null;
+
     function loadHistory() {
       const data = JSON.parse(localStorage.getItem('reflections')) || [];
       historyBody.innerHTML = '';
@@ -689,16 +1293,41 @@
             </td>
           </tr>
         `;
+        updateChartInfo(0, null);
         return;
       }
 
-      const sortedData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      const labels = [];
-      const emotionTextValues = [];
-      const emotionFaceValues = [];
+      let sortedData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      // Filter data for both table and chart based on date filter
+      let filteredData = [...sortedData];
+      
+      if (currentDateFilter) {
+        filteredData = sortedData.filter(entry => {
+          const entryDate = new Date(entry.date);
+          return entryDate >= currentDateFilter.start && entryDate <= currentDateFilter.end;
+        });
+      }
 
-      // Show all data in table
-      sortedData.forEach((entry, index) => {
+      // Show filtered data in table
+      if (filteredData.length === 0) {
+        historyBody.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <h3>Tidak ada data pada rentang tanggal ini</h3>
+                <p>Coba ubah rentang tanggal atau reset filter</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        updateChartInfo(0, currentDateFilter);
+        renderChart([]);
+        return;
+      }
+
+      filteredData.forEach((entry, index) => {
         const time = `${entry.date} ${entry.time}`;
         const emotionText = entry.emotionTranslated || '-';
 
@@ -726,10 +1355,19 @@
         historyBody.appendChild(row);
       });
       
-      // For chart, limit to last 15 entries to prevent overcrowding
-      const chartData = [...sortedData].reverse().slice(0, 15).reverse();
+      // For chart, limit to prevent overcrowding
+      const chartData = filteredData.reverse().slice(0, 15).reverse();
       
-      chartData.forEach(entry => {
+      updateChartInfo(filteredData.length, currentDateFilter);
+      renderChart(chartData);
+    }
+
+    function renderChart(data) {
+      const labels = [];
+      const emotionTextValues = [];
+      const emotionFaceValues = [];
+      
+      data.forEach(entry => {
         // Format date to be more compact for chart
         const time = entry.date.slice(5); // Just month & day (MM-DD)
         labels.unshift(time);
@@ -737,10 +1375,6 @@
         emotionFaceValues.unshift(emotionMap[entry.emotionTranslated?.toLowerCase()] ?? null);
       });
 
-      renderChart(labels, emotionTextValues, emotionFaceValues);
-    }
-
-    function renderChart(labels, textValues, faceValues) {
       // Destroy previous chart instance if exists
       if (window.emotionChart) {
         window.emotionChart.destroy();
@@ -753,7 +1387,7 @@
           datasets: [
             {
               label: 'Emosi Teks',
-              data: textValues,
+              data: emotionTextValues,
               borderColor: '#667eea',
               backgroundColor: 'rgba(102, 126, 234, 0.1)',
               tension: 0.4,
@@ -765,7 +1399,7 @@
             },
             {
               label: 'Emosi Wajah',
-              data: faceValues,
+              data: emotionFaceValues,
               borderColor: '#f093fb',
               backgroundColor: 'rgba(240, 147, 251, 0.1)',
               tension: 0.4,
@@ -1026,6 +1660,55 @@
         }));
       }
     }
+
+    function applyDateFilter() {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      
+      if (!startDate || !endDate) {
+        alert('Mohon pilih tanggal mulai dan tanggal akhir');
+        return;
+      }
+      
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      
+      if (start > end) {
+        alert('Tanggal mulai tidak boleh lebih besar dari tanggal akhir');
+        return;
+      }
+      
+      currentDateFilter = { start, end };
+      loadHistory();
+    }
+
+    function resetDateFilter() {
+      currentDateFilter = null;
+      document.getElementById('start-date').value = '';
+      document.getElementById('end-date').value = '';
+      loadHistory();
+    }
+
+    function updateChartInfo(dataCount, dateFilter) {
+      const chartInfo = document.getElementById('chart-info');
+      
+      if (dateFilter) {
+        const startStr = dateFilter.start.toLocaleDateString('id-ID');
+        const endStr = dateFilter.end.toLocaleDateString('id-ID');
+        chartInfo.textContent = `Menampilkan ${dataCount} data refleksi dari ${startStr} sampai ${endStr}`;
+      } else {
+        chartInfo.textContent = `Menampilkan semua ${dataCount} data refleksi`;
+      }
+    }
+
+    // Initialize date inputs with reasonable defaults
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+      
+      document.getElementById('end-date').value = today.toISOString().split('T')[0];
+      document.getElementById('start-date').value = oneMonthAgo.toISOString().split('T')[0];
+    });
   </script>
 </body>
 </html>
