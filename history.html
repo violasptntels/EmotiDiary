@@ -293,43 +293,117 @@
     .emotion-sedih { background: #d1ecf1; color: #0c5460; }
     .emotion-marah { background: #f8d7da; color: #721c24; }
 
-    /* Chart Section */
-    .chart-section {
-      background: var(--card-background);
-      border-radius: 16px;
+    /* Action buttons in table */
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      min-width: auto;
+    }
+
+    .btn-edit {
+      background: linear-gradient(135deg, var(--warning-color), #dd6b20);
+      color: white;
+    }
+
+    .btn-delete {
+      background: linear-gradient(135deg, var(--error-color), #e53e3e);
+      color: white;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: var(--card-background);
+      margin: 5% auto;
       padding: 2rem;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-color);
-      position: relative;
-      height: 450px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: var(--shadow-xl);
     }
 
-    #emotion-chart {
-      position: relative !important;
-      max-height: 400px;
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
     }
 
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: var(--text-muted);
-    }
-
-    .empty-state i {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    .empty-state h3 {
+    .modal-title {
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-secondary);
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
-    .empty-state p {
-      font-size: 1rem;
+    .close {
+      color: var(--text-muted);
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: var(--text-primary);
+    }
+
+    .form-group-modal {
+      margin-bottom: 1rem;
+    }
+
+    .form-label-modal {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
     }
 
     /* Responsive Design */
@@ -421,6 +495,21 @@
 
       td:last-child {
         border-bottom: 0;
+      }
+
+      .action-buttons {
+        justify-content: flex-start;
+        padding-left: 50% !important;
+      }
+
+      .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        padding: 1.5rem;
+      }
+
+      .modal-buttons {
+        flex-direction: column;
       }
     }
 
@@ -531,6 +620,7 @@
                 <th>Emosi Wajah</th>
                 <th>Emosi Teks</th>
                 <th>Refleksi</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="history-body"></tbody>
@@ -590,7 +680,7 @@
       if (data.length === 0) {
         historyBody.innerHTML = `
           <tr>
-            <td colspan="4">
+            <td colspan="5">
               <div class="empty-state">
                 <i class="fas fa-inbox"></i>
                 <h3>Belum ada data refleksi</h3>
@@ -608,7 +698,7 @@
       const emotionFaceValues = [];
 
       // Show all data in table
-      sortedData.forEach(entry => {
+      sortedData.forEach((entry, index) => {
         const time = `${entry.date} ${entry.time}`;
         const emotionText = entry.emotionTranslated || '-';
 
@@ -622,6 +712,16 @@
             <span class="${getEmotionBadgeClass(emotionText)}">${emotionText}</span>
           </td>
           <td data-label="Refleksi">${entry.text}</td>
+          <td data-label="Aksi">
+            <div class="action-buttons">
+              <button class="btn btn-edit btn-sm" onclick="editReflection(${entry.id})">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-delete btn-sm" onclick="deleteReflection(${entry.id})">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
         `;
         historyBody.appendChild(row);
       });
@@ -839,6 +939,93 @@
     
     // Initial load
     loadHistory();
+
+    function deleteReflection(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus refleksi ini?')) {
+        let reflections = JSON.parse(localStorage.getItem('reflections')) || [];
+        reflections = reflections.filter(reflection => reflection.id !== id);
+        localStorage.setItem('reflections', JSON.stringify(reflections));
+        loadHistory();
+        
+        // Trigger update events
+        window.dispatchEvent(new CustomEvent('dataUpdated', { 
+          detail: { source: 'history', reflections: reflections } 
+        }));
+      }
+    }
+
+    function editReflection(id) {
+      const reflections = JSON.parse(localStorage.getItem('reflections')) || [];
+      const reflection = reflections.find(r => r.id === id);
+      
+      if (!reflection) return;
+
+      // Create modal
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit Refleksi</h2>
+            <span class="close">&times;</span>
+          </div>
+          <div class="form-group-modal">
+            <label class="form-label-modal">Emosi</label>
+            <input type="text" class="form-input" id="edit-emotion" value="${reflection.emotionTranslated || ''}" readonly>
+          </div>
+          <div class="form-group-modal">
+            <label class="form-label-modal">Refleksi</label>
+            <textarea class="form-textarea" id="edit-text">${reflection.text}</textarea>
+          </div>
+          <div class="modal-buttons">
+            <button class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+            <button class="btn btn-primary" onclick="saveEdit(${id})">Simpan</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      modal.style.display = 'block';
+
+      // Close modal events
+      modal.querySelector('.close').onclick = () => closeEditModal();
+      modal.onclick = (e) => {
+        if (e.target === modal) closeEditModal();
+      };
+    }
+
+    function closeEditModal() {
+      const modal = document.querySelector('.modal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+
+    function saveEdit(id) {
+      const newText = document.getElementById('edit-text').value.trim();
+      
+      if (!newText) {
+        alert('Refleksi tidak boleh kosong!');
+        return;
+      }
+
+      let reflections = JSON.parse(localStorage.getItem('reflections')) || [];
+      const reflectionIndex = reflections.findIndex(r => r.id === id);
+      
+      if (reflectionIndex !== -1) {
+        reflections[reflectionIndex].text = newText;
+        reflections[reflectionIndex].wordCount = newText.split(/\s+/).filter(word => word.length > 0).length;
+        
+        localStorage.setItem('reflections', JSON.stringify(reflections));
+        closeEditModal();
+        loadHistory();
+        
+        // Trigger update events
+        window.dispatchEvent(new CustomEvent('dataUpdated', { 
+          detail: { source: 'history', reflections: reflections } 
+        }));
+      }
+    }
   </script>
 </body>
 </html>
