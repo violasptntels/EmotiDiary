@@ -37,7 +37,9 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--background-color);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
       color: var(--text-primary);
       line-height: 1.6;
     }
@@ -128,36 +130,38 @@
     /* Main Content */
     .main-content {
       margin-left: 280px;
-      padding: 2rem;
+      padding: 1.5rem;
       transition: margin-left 0.3s ease;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
+      width: 95%;
     }
 
     .page-header {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .page-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      color: white;
       margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .page-subtitle {
       font-size: 1.1rem;
-      color: var(--text-muted);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     /* Action Buttons */
     .action-bar {
       display: flex;
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
 
@@ -199,7 +203,7 @@
       padding: 2rem;
       box-shadow: var(--shadow-md);
       border: 1px solid var(--border-color);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .section-header {

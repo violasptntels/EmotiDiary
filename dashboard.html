@@ -36,7 +36,9 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--background-color);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
       color: var(--text-primary);
       line-height: 1.6;
     }
@@ -127,13 +129,14 @@
     /* Main Content */
     .main-content {
       margin-left: 280px;
-      padding: 2rem;
+      padding: 1.5rem;
       transition: margin-left 0.3s ease;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
+      width: 95%;
     }
 
     .page-header {
@@ -143,19 +146,20 @@
     .page-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      color: white;
       margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .page-subtitle {
       font-size: 1.1rem;
-      color: var(--text-muted);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     /* Stats Cards */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2rem;
     }
@@ -228,7 +232,7 @@
     .content-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 1.5rem;
       margin-bottom: 2rem;
     }
 
@@ -517,7 +521,9 @@
             </div>
             <h2 class="card-title">Tentang EmotiDiary</h2>
           </div>
-          <p><strong>EmotiDiary</strong> adalah aplikasi refleksi emosi harian berbasis teknologi AI dan deteksi wajah. Aplikasi ini membantu Anda memahami dan melacak perubahan emosional setiap hari, untuk meningkatkan kesadaran diri dan kesehatan mental.</p>
+          <p><strong>EmotiDiary</strong> EmotiDiary adalah sebuah aplikasi refleksi emosional berbasis web yang dirancang untuk membantu individu mengenali dan merekam kondisi emosinya melalui ekspresi wajah. Dengan mengombinasikan deteksi ekspresi secara real-time dan fitur penulisan jurnal harian, 
+aplikasi ini mendorong pengguna untuk melakukan pencatatan perasaan, serta memvisualisasikan grafik perubahan emosinya dalam rentang waktu tertentu. EmotiDiary dapat digunakan secara mandiri oleh siapa pun yang ingin memahami dinamika emosinya dalam kehidupan sehari-hari, baik untuk keperluan self-care, terapi ringan, maupun pelacakan mood jangka panjang
+</p>
         </div>
 
         <div class="content-card">
